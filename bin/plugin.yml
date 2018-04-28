@@ -1,0 +1,17 @@
+main: net.hashcodedevelopement.freelobby.Lobbysystem
+
+name: HashCodeDev-LobbySystem
+author: Cerus
+authors: [Mondstation]
+version: 1.0
+description: (Core Module) LobbySystem developed by HashCodeDevelopement. You are not allowed to sell, share or decompile this plugin without our permission.
+softdepend: [HashCodeDev-CoinsAPI, HashCodeDev-Friends, HashCodeDev-Gadgets, HashCodeDev-ChatAddon]
+website: www.hashcodedevelopement.net
+
+commands:
+  build:
+  warp:
+  navigator:
+  spawn:
+  playerhider:
+  profil:
