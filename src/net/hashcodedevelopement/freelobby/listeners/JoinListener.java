@@ -76,8 +76,16 @@ public class JoinListener implements Listener {
 		if (!player.hasPlayedBefore()) {
 
 			if (Utils.firstMessage) {
-				player.sendMessage(Utils.prefix + "Hallo, §a" + player.getName()
-						+ "! §7Es sieht so aus, als würdest du hier das erste Mal spielen. Deshalb werde ich für dich erstmal deine persönlichen Dateien erstellen!");
+				switch (Lobbysystem.language){
+				case DE:
+					player.sendMessage(Utils.prefix + "Hallo, §a" + player.getName() + "! §7Es sieht so aus, als würdest du hier das erste Mal spielen. Deshalb werde ich für dich erstmal deine persönlichen Dateien erstellen!");
+					break;
+				case EN:
+					player.sendMessage(Utils.prefix + "Hello, §a" + player.getName() + "! §7It looks like youre playing the first time on this server. Thats why i am creating your personal files now!");
+					break;
+				default:
+					break;
+				}
 			}
 
 			if (!configuration.contains("Chat")) {
@@ -90,8 +98,18 @@ public class JoinListener implements Listener {
 			}
 
 			if (Utils.firstMessage) {
-				player.sendMessage(Utils.prefix
-						+ "So, der Vorgang ist dann soweit abgeschlossen! Ich wünsche dir weiterhin noch viel Spaß bei uns!");
+				switch (Lobbysystem.language){
+				case DE:
+					player.sendMessage(Utils.prefix
+							+ "So, der Vorgang ist dann soweit abgeschlossen! Ich wünsche dir weiterhin noch viel Spaß bei uns!");
+					break;
+				case EN:
+					player.sendMessage(Utils.prefix
+							+ "Alright, im done! I still wish you much fun with us!");
+					break;
+				default:
+					break;
+				}
 			}
 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Lobbysystem.getInstance(), new Runnable() {

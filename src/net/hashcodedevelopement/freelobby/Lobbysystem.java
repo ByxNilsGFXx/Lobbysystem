@@ -22,11 +22,13 @@ import net.hashcodedevelopement.freelobby.listeners.CommandPreprocessListener;
 import net.hashcodedevelopement.freelobby.listeners.InteractListener;
 import net.hashcodedevelopement.freelobby.listeners.JoinListener;
 import net.hashcodedevelopement.freelobby.listeners.QuitListener;
+import net.hashcodedevelopement.freelobby.manager.LanguageManager.Language;
 import net.hashcodedevelopement.freelobby.util.Utils;
 
 public class Lobbysystem extends JavaPlugin {
 
 	private static Lobbysystem instance;
+	public static Language language;
 	
 	public static Plugin friendAddon = null;
 	public static Plugin coinsAddon = null;
@@ -67,20 +69,43 @@ public class Lobbysystem extends JavaPlugin {
 	}
 
 	private void loadAddons() {
-		if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-Friends")){
-			System.out.println("Modul \"HashCodeDev-Friends\" wurde gefunden. Aktiviere...");
-			friendAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-Friends");
-			System.out.println("Modul \"HashCodeDev-Friends\" wurde aktiviert!");
-		}
-		if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-CoinsAPI")){
-			System.out.println("Modul \"HashCodeDev-CoinsAPI\" wurde gefunden. Aktiviere...");
-			coinsAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-CoinsAPI");
-			System.out.println("Modul \"HashCodeDev-CoinsAPI\" wurde aktiviert!");
-		}
-		if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-ChatAddon")){
-			System.out.println("Modul \"HashCodeDev-ChatAddon\" wurde gefunden. Aktiviere...");
-			coinsAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-ChatAddon");
-			System.out.println("Modul \"HashCodeDev-ChatAddon\" wurde aktiviert!");
+		switch (language){
+		case DE:
+			if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-Friends")){
+				System.out.println("Modul \"HashCodeDev-Friends\" wurde gefunden. Aktiviere...");
+				friendAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-Friends");
+				System.out.println("Modul \"HashCodeDev-Friends\" wurde aktiviert!");
+			}
+			if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-CoinsAPI")){
+				System.out.println("Modul \"HashCodeDev-CoinsAPI\" wurde gefunden. Aktiviere...");
+				coinsAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-CoinsAPI");
+				System.out.println("Modul \"HashCodeDev-CoinsAPI\" wurde aktiviert!");
+			}
+			if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-ChatAddon")){
+				System.out.println("Modul \"HashCodeDev-ChatAddon\" wurde gefunden. Aktiviere...");
+				coinsAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-ChatAddon");
+				System.out.println("Modul \"HashCodeDev-ChatAddon\" wurde aktiviert!");
+			}
+			break;
+		case EN:
+			if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-Friends")){
+				System.out.println("Module \"HashCodeDev-Friends\" was found. Activating...");
+				friendAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-Friends");
+				System.out.println("Module \"HashCodeDev-Friends\" was activated!");
+			}
+			if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-CoinsAPI")){
+				System.out.println("Module \"HashCodeDev-CoinsAPI\" was found. Activating...");
+				coinsAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-CoinsAPI");
+				System.out.println("Module \"HashCodeDev-CoinsAPI\" was activated!");
+			}
+			if(Bukkit.getPluginManager().isPluginEnabled("HashCodeDev-ChatAddon")){
+				System.out.println("Module \"HashCodeDev-ChatAddon\" was found. Activating...");
+				coinsAddon = Bukkit.getPluginManager().getPlugin("HashCodeDev-ChatAddon");
+				System.out.println("Module \"HashCodeDev-ChatAddon\" was activated!");
+			}
+			break;
+		default:
+			break;
 		}
 	}
 	
@@ -112,6 +137,15 @@ public class Lobbysystem extends JavaPlugin {
 			}
 		}
 		Utils.loadValues();
+		
+		if(language == Language.DE){
+			System.out.println("[LANGUAGE MANAGER] Das Plugin läuft nun auf Deutsch!");
+		} else if(language == Language.EN){
+			System.out.println("[LANGUAGE MANAGER] The plugin operates now in english!");
+		} else {
+			System.out.println("An fatal error occured while enabling Lobbysystem.. The chosen language isnt supported!");
+			Bukkit.getPluginManager().disablePlugin(this);
+		}
 	}
 	
 	public static Lobbysystem getInstance() {

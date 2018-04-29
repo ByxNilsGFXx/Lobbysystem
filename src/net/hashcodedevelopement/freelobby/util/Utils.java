@@ -17,6 +17,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.spigotmc.SpigotConfig;
 
+import net.hashcodedevelopement.freelobby.Lobbysystem;
+import net.hashcodedevelopement.freelobby.manager.LanguageManager.Language;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
@@ -58,8 +60,7 @@ public class Utils {
 
 	public static void loadValues() {
 		if (!cfg.contains("Prefix")) {
-			cfg.options().header(
-					"Variablen: %prefix% = Prefix, %PlayerName% = Name des Spielers, %PlayerCount% = Zahl aller gejointen Spieler, %NewLine% = Neue Zeile");
+			cfg.options().header("Variablen: %prefix% = Prefix, %PlayerName% = Name des Spielers, %PlayerCount% = Zahl aller gejointen Spieler, %NewLine% = Neue Zeile");
 			cfg.set("Prefix", "&6&lL&e&lobby&6&lS&e&lystem &8» &7");
 			lobbyitemCfg.set("0.Slot", 1);
 			lobbyitemCfg.set("0.Name", "&7Navigator");
@@ -86,13 +87,18 @@ public class Utils {
 			lobbyitemCfg.set("3.Action", Action.RIGHT_CLICK_AIR.toString());
 			lobbyitemCfg.set("3.SecondAction", Action.RIGHT_CLICK_BLOCK.toString());
 		}
+		if (!cfg.contains("Language")) {
+			cfg.set("Language", Language.EN.toString());
+		}
 		if (!cfg.contains("JoinNachricht")) {
 			cfg.set("JoinNachricht.Bool", true);
-			cfg.set("JoinNachricht.Nachricht", "%prefix%Der Spieler &b%PlayerName% &7ist nun &aOnline&7!");
+			cfg.set("JoinNachricht.Nachricht.DE", "%prefix%Der Spieler &b%PlayerName% &7ist nun &aOnline&7!");
+			cfg.set("JoinNachricht.Nachricht.EN", "%prefix%The player &b%PlayerName% &7is now &aonline&7!");
 		}
 		if (!cfg.contains("QuitNachricht")) {
 			cfg.set("QuitNachricht.Bool", true);
-			cfg.set("QuitNachricht.Nachricht", "%prefix%Der Spieler &b%PlayerName% &7ist nun &cOffline&7!");
+			cfg.set("QuitNachricht.Nachricht.DE", "%prefix%Der Spieler &b%PlayerName% &7ist nun &cOffline&7!");
+			cfg.set("QuitNachricht.Nachricht.EN", "%prefix%The player &b%PlayerName% &7is now &coffline&7!");
 		}
 		if (!cfg.contains("CommandWhitelist")) {
 			List<String> list = new ArrayList<>();
@@ -111,26 +117,46 @@ public class Utils {
 			cfg.set("Mode.SingleServerWorld", "world");
 		}
 		if (!cfg.contains("CommandNotFound")) {
-			cfg.set("CommandNotFound", "%prefix%Dieser Command wurde nicht gefunden!");
+			cfg.set("CommandNotFound.DE", "%prefix%Dieser Command wurde nicht gefunden!");
+			cfg.set("CommandNotFound.EN", "%prefix%This command was not found!");
 		}
 		if (!cfg.contains("FirstjoinNachricht")) {
-			List<String> msg = new ArrayList<>();
-			msg.add(" ");
-			msg.add("&8&m--------------------");
-			msg.add("%prefix%Der Spieler %PlayerName% ist neu auf dem Server! &b#%PlayerCount%");
-			msg.add("&8&m--------------------");
-			msg.add(" ");
+			List<String> msg1 = new ArrayList<>();
+			msg1.add(" ");
+			msg1.add("&8&m--------------------");
+			msg1.add("%prefix%Der Spieler %PlayerName% ist neu auf dem Server! &b#%PlayerCount%");
+			msg1.add("&8&m--------------------");
+			msg1.add(" ");
 
+			List<String> msg2 = new ArrayList<>();
+			msg2.add(" ");
+			msg2.add("&8&m--------------------");
+			msg2.add("%prefix%The player %PlayerName% is new on the Server! &b#%PlayerCount%");
+			msg2.add("&8&m--------------------");
+			msg2.add(" ");
+			
 			cfg.set("FirstjoinNachricht.Bool", true);
-			cfg.set("FirstjoinNachricht.Nachricht", msg);
+			cfg.set("FirstjoinNachricht.Nachricht.DE", msg1);
+			cfg.set("FirstjoinNachricht.Nachricht.DE", msg2);
 		}
 		if (!cfg.contains("Tablist")) {
-			cfg.set("Tablist.Header", "&0%NewLine%&8* &7Dein ServerName &8*%NewLine%&7Dein Motto%NewLine%&0");
-			cfg.set("Tablist.Footer", "&0%NewLine%&7Teamspeak: &ats.arzania.eu%NewLine%&7Website: &aarzania.eu%NewLine%&7Twitter: &b@ArzaniaEU%NewLine%&0");
+			cfg.set("Tablist.Header.DE", "&0%NewLine%&8* &7Dein ServerName &8*%NewLine%&7Dein Motto%NewLine%&0");
+			cfg.set("Tablist.Footer.DE", "&0%NewLine%&7Teamspeak: &ats.arzania.eu%NewLine%&7Website: &aarzania.eu%NewLine%&7Twitter: &b@ArzaniaEU%NewLine%&0");
+			cfg.set("Tablist.Header.EN", "&0%NewLine%&8* &7Your servername &8*%NewLine%&7Your motto%NewLine%&0");
+			cfg.set("Tablist.Footer.EN", "&0%NewLine%&7Teamspeak: &ats.arzania.eu%NewLine%&7Website: &aarzania.eu%NewLine%&7Twitter: &b@ArzaniaEU%NewLine%&0");
 		}
+		
 		saveLobbyitemCfg();
 		saveCfg();
 
+		if(!cfg.getString("Language").equals("DE") || !cfg.getString("Language").equals("EN")){
+			System.out.println("Language "+cfg.getString("Language")+" is not supported! Choose DE or EN!");
+			cfg.set("Language", "EN");
+			saveCfg();
+		}
+		
+		Lobbysystem.language = Language.valueOf(cfg.getString("Language"));
+		
 		singleServer = cfg.getBoolean("Mode.SingleServer");
 		if(singleServer){
 			world = cfg.getString("Mode.SingleServerWorld");
@@ -140,21 +166,39 @@ public class Utils {
 			items.add(Material.getMaterial(lobbyitemCfg.getString(key + ".Material")));
 		}
 
-		joinMessage = cfg.getBoolean("JoinNachricht.Bool");
-		quitMessage = cfg.getBoolean("QuitNachricht.Bool");
-		firstMessage = cfg.getBoolean("FirstjoinNachricht.Bool");
-		commandWhitelist = cfg.getBoolean("CommandWhitelist.Bool");
-
-		tablistFooter = ChatColor.translateAlternateColorCodes('&', cfg.getString("Tablist.Footer").replace("%NewLine%", "\n"));
-		tablistHeader = ChatColor.translateAlternateColorCodes('&', cfg.getString("Tablist.Header").replace("%NewLine%", "\n"));
-		prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString("Prefix"));
-		playerCount = cfg.getInt("GejointeSpieler");
-		joinMsg = cfg.getString("JoinNachricht.Nachricht");
-		quitMsg = cfg.getString("QuitNachricht.Nachricht");
-		firstjoinMsg = cfg.getStringList("FirstoinNachricht.Nachricht");
-		commandNotFound = cfg.getString("CommandNotFound").replace("%prefix%", prefix);
-		
-		SpigotConfig.unknownCommandMessage = commandNotFound;
+		if(Lobbysystem.language == Language.DE){
+			joinMessage = cfg.getBoolean("JoinNachricht.Bool");
+			quitMessage = cfg.getBoolean("QuitNachricht.Bool");
+			firstMessage = cfg.getBoolean("FirstjoinNachricht.Bool");
+			commandWhitelist = cfg.getBoolean("CommandWhitelist.Bool");
+			
+			tablistFooter = ChatColor.translateAlternateColorCodes('&', cfg.getString("Tablist.Footer.DE").replace("%NewLine%", "\n"));
+			tablistHeader = ChatColor.translateAlternateColorCodes('&', cfg.getString("Tablist.Header.DE").replace("%NewLine%", "\n"));
+			prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString("Prefix"));
+			playerCount = cfg.getInt("GejointeSpieler");
+			joinMsg = cfg.getString("JoinNachricht.Nachricht.DE");
+			quitMsg = cfg.getString("QuitNachricht.Nachricht.DE");
+			firstjoinMsg = cfg.getStringList("FirstoinNachricht.Nachricht.DE");
+			commandNotFound = cfg.getString("CommandNotFound.DE").replace("%prefix%", prefix);
+			
+			SpigotConfig.unknownCommandMessage = commandNotFound;
+		} else if(Lobbysystem.language == Language.EN){
+			joinMessage = cfg.getBoolean("JoinNachricht.Bool");
+			quitMessage = cfg.getBoolean("QuitNachricht.Bool");
+			firstMessage = cfg.getBoolean("FirstjoinNachricht.Bool");
+			commandWhitelist = cfg.getBoolean("CommandWhitelist.Bool");
+			
+			tablistFooter = ChatColor.translateAlternateColorCodes('&', cfg.getString("Tablist.Footer.EN").replace("%NewLine%", "\n"));
+			tablistHeader = ChatColor.translateAlternateColorCodes('&', cfg.getString("Tablist.Header.EN").replace("%NewLine%", "\n"));
+			prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString("Prefix"));
+			playerCount = cfg.getInt("GejointeSpieler");
+			joinMsg = cfg.getString("JoinNachricht.Nachricht.EN");
+			quitMsg = cfg.getString("QuitNachricht.Nachricht.EN");
+			firstjoinMsg = cfg.getStringList("FirstoinNachricht.Nachricht.EN");
+			commandNotFound = cfg.getString("CommandNotFound.EN").replace("%prefix%", prefix);
+			
+			SpigotConfig.unknownCommandMessage = commandNotFound;
+		}
 	}
 
 	public static void saveCfg() {
@@ -174,7 +218,16 @@ public class Utils {
 	}
 
 	public static void noPermissions(Player player) {
-		player.sendMessage(Utils.fehler + "Dazu hast du keine §nBerechtigung§c!");
+		switch (Lobbysystem.language){
+		case DE:
+			player.sendMessage(Utils.fehler + "Dazu hast du keine §nBerechtigung§c!");
+			break;
+		case EN:
+			player.sendMessage(Utils.fehler + "You do not have §npermissions§c for this!");
+			break;
+		default:
+			break;
+		}
 		player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
 	}
 
@@ -216,7 +269,17 @@ public class Utils {
 	}
 	
 	public static String getChatStateString(UUID uniqueId) {
-		String toReturn = "§8(§4Fehler§8)";
+		String toReturn = "";
+		switch (Lobbysystem.language){
+		case DE:
+			toReturn = "§8(§4Fehler§8)";
+			break;
+		case EN:
+			toReturn = "§8(§4Error§8)";
+			break;
+		default:
+			break;
+		}
 		
 		File file = new File("plugins//Lobbysystem//Playerdata//"+uniqueId+".yml");
 		FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
@@ -231,8 +294,28 @@ public class Utils {
 		}
 		
 		if(configuration.getBoolean("Chat")){
-			toReturn = "§8(§a§lAn§8)";
-		} else toReturn = "§8(§c§lAus§8)";
+			switch (Lobbysystem.language){
+			case DE:
+				toReturn = "§8(§a§lAn§8)";
+				break;
+			case EN:
+				toReturn = "§8(§a§lOn§8)";
+				break;
+			default:
+				break;
+			}
+		} else {
+			switch (Lobbysystem.language){
+			case DE:
+				toReturn = "§8(§c§lAus§8)";
+				break;
+			case EN:
+				toReturn = "§8(§c§lOff§8)";
+				break;
+			default:
+				break;
+			}
+		}
 		
 		return toReturn;
 	}

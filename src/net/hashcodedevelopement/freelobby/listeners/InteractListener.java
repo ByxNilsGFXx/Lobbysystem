@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.hashcodedevelopement.freelobby.Lobbysystem;
 import net.hashcodedevelopement.freelobby.commands.CMD_Playerhider;
 import net.hashcodedevelopement.freelobby.manager.WarpManager;
 import net.hashcodedevelopement.freelobby.util.Utils;
@@ -54,67 +55,138 @@ public class InteractListener implements Listener {
 							Location location = (Location) WarpManager.cfg.get(key + ".Location");
 							player.teleport(location);
 							player.playSound(location, Sound.ENDERMAN_TELEPORT, 3, 1);
-							Utils.sendActionbar("§7Warpe zu §e" + ChatColor.translateAlternateColorCodes('&', key),
-									player.getUniqueId());
+
+							switch (Lobbysystem.language) {
+							case DE:
+								Utils.sendActionbar("§7Warpe zu §e" + ChatColor.translateAlternateColorCodes('&', key),
+										player.getUniqueId());
+								break;
+							case EN:
+								Utils.sendActionbar("§7Warping to §e" + ChatColor.translateAlternateColorCodes('&', key),
+										player.getUniqueId());
+								break;
+							default:
+								break;
+							}
 						}
 					}
 				}
-			} else if (e.getInventory().getTitle().equals("§a§lSpieler verstecken")) {
-				if (itemStack.getItemMeta().getDisplayName().contains("§7")) {
-					CMD_Playerhider.hashMap.remove(player.getUniqueId());
-					CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_NONE);
-					
-					for(Player all : Bukkit.getOnlinePlayers()){
-						player.hidePlayer(all);
-					}
-					
-					player.performCommand("playerhider");
-					player.sendMessage(Utils.prefix+"Dir werden nun keine Spieler angezeigt.");
-				} else if (itemStack.getItemMeta().getDisplayName().contains("§5")) {
-					CMD_Playerhider.hashMap.remove(player.getUniqueId());
-					CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_VIP);
-					
-					for(Player all : Bukkit.getOnlinePlayers()){
-						player.hidePlayer(all);
-					}
-					for(Player all : Bukkit.getOnlinePlayers()){
-						if(all.hasPermission("lobby.extra.vip")){
+			} else if (e.getInventory().getTitle().equals("§a§lSpieler verstecken")
+					|| e.getInventory().getTitle().equals("§a§lPlayerhider")) {
+				switch (Lobbysystem.language) {
+				case DE:
+					if (itemStack.getItemMeta().getDisplayName().contains("§7")) {
+						CMD_Playerhider.hashMap.remove(player.getUniqueId());
+						CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_NONE);
+
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							player.hidePlayer(all);
+						}
+
+						player.performCommand("playerhider");
+						player.sendMessage(Utils.prefix + "Dir werden nun keine Spieler angezeigt.");
+					} else if (itemStack.getItemMeta().getDisplayName().contains("§5")) {
+						CMD_Playerhider.hashMap.remove(player.getUniqueId());
+						CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_VIP);
+
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							player.hidePlayer(all);
+						}
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							if (all.hasPermission("lobby.extra.vip")) {
+								player.showPlayer(all);
+							}
+						}
+
+						player.performCommand("playerhider");
+						player.sendMessage(Utils.prefix + "Dir werden nun nur VIP's angezeigt.");
+					} else if (itemStack.getItemMeta().getDisplayName().contains("§a")) {
+						CMD_Playerhider.hashMap.remove(player.getUniqueId());
+						CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_ALL);
+
+						for (Player all : Bukkit.getOnlinePlayers()) {
 							player.showPlayer(all);
 						}
+
+						player.performCommand("playerhider");
+						player.sendMessage(Utils.prefix + "Dir werden nun alle Spieler angezeigt.");
 					}
-					
-					player.performCommand("playerhider");
-					player.sendMessage(Utils.prefix+"Dir werden nun nur VIP's angezeigt.");
-				} else if (itemStack.getItemMeta().getDisplayName().contains("§a")) {
-					CMD_Playerhider.hashMap.remove(player.getUniqueId());
-					CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_ALL);
-					
-					for(Player all : Bukkit.getOnlinePlayers()){
-						player.showPlayer(all);
+					break;
+				case EN:
+					if (itemStack.getItemMeta().getDisplayName().contains("§7")) {
+						CMD_Playerhider.hashMap.remove(player.getUniqueId());
+						CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_NONE);
+
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							player.hidePlayer(all);
+						}
+
+						player.performCommand("playerhider");
+						player.sendMessage(Utils.prefix + "All players are now hidden.");
+					} else if (itemStack.getItemMeta().getDisplayName().contains("§5")) {
+						CMD_Playerhider.hashMap.remove(player.getUniqueId());
+						CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_VIP);
+
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							player.hidePlayer(all);
+						}
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							if (all.hasPermission("lobby.extra.vip")) {
+								player.showPlayer(all);
+							}
+						}
+
+						player.performCommand("playerhider");
+						player.sendMessage(Utils.prefix + "Only VIP's are shown.");
+					} else if (itemStack.getItemMeta().getDisplayName().contains("§a")) {
+						CMD_Playerhider.hashMap.remove(player.getUniqueId());
+						CMD_Playerhider.hashMap.put(player.getUniqueId(), CMD_Playerhider.HIDE.SHOW_ALL);
+
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							player.showPlayer(all);
+						}
+
+						player.performCommand("playerhider");
+						player.sendMessage(Utils.prefix + "All players are now visible.");
 					}
-					
-					player.performCommand("playerhider");
-					player.sendMessage(Utils.prefix+"Dir werden nun alle Spieler angezeigt.");
+					break;
+				default:
+					break;
 				}
 			} else if (e.getInventory().getTitle().equals("§b§lProfil")) {
-				if(itemStack.getType().equals(Material.BOOK)){
-					File file = new File("plugins//Lobbysystem//Playerdata//"+player.getUniqueId()+".yml");
+				if (itemStack.getType().equals(Material.BOOK)) {
+					File file = new File("plugins//Lobbysystem//Playerdata//" + player.getUniqueId() + ".yml");
 					FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-					
-					if(Utils.getChatState(player.getUniqueId())){
-						configuration.set("Chat", false);
-						player.sendMessage(Utils.prefix+"Der Chat ist nun für dich ausgeblendet!");
-					} else {
-						configuration.set("Chat", true);
-						player.sendMessage(Utils.prefix+"Der Chat wird dir nun wieder angezeigt!");
+
+					switch (Lobbysystem.language) {
+					case DE:
+						if (Utils.getChatState(player.getUniqueId())) {
+							configuration.set("Chat", false);
+							player.sendMessage(Utils.prefix + "Der Chat ist nun für dich ausgeblendet!");
+						} else {
+							configuration.set("Chat", true);
+							player.sendMessage(Utils.prefix + "Der Chat wird dir nun wieder angezeigt!");
+						}
+						break;
+					case EN:
+						if (Utils.getChatState(player.getUniqueId())) {
+							configuration.set("Chat", false);
+							player.sendMessage(Utils.prefix + "The chat is now hidden!");
+						} else {
+							configuration.set("Chat", true);
+							player.sendMessage(Utils.prefix + "The chat is now shown!");
+						}
+						break;
+					default:
+						break;
 					}
-					
+
 					try {
 						configuration.save(file);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-					
+
 					player.performCommand("profil");
 				}
 			}

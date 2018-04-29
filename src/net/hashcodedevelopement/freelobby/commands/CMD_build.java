@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.hashcodedevelopement.freelobby.Lobbysystem;
 import net.hashcodedevelopement.freelobby.util.Utils;
 
 public class CMD_build implements CommandExecutor {
@@ -17,10 +18,30 @@ public class CMD_build implements CommandExecutor {
 			if (player.hasPermission("lobby.cmd.build")) {
 				if (Utils.isBuildMode(player.getName())) {
 					Utils.buildmode.remove(player.getName());
-					player.sendMessage(Utils.prefix + "Der Baumodus wurde §cdeaktiviert!");
+					
+					switch (Lobbysystem.language){
+					case DE:
+						player.sendMessage(Utils.prefix + "Der Baumodus wurde §cdeaktiviert!");
+						break;
+					case EN:
+						player.sendMessage(Utils.prefix + "The buildmode was §cdeactivated!");
+						break;
+					default:
+						break;
+					}
 				} else {
 					Utils.buildmode.add(player.getName());
-					player.sendMessage(Utils.prefix + "Der Baumodus wurde §aaktiviert!");
+					
+					switch (Lobbysystem.language){
+					case DE:
+						player.sendMessage(Utils.prefix + "Der Baumodus wurde §aaktiviert!");
+						break;
+					case EN:
+						player.sendMessage(Utils.prefix + "The buildmode was §aactivated!");
+						break;
+					default:
+						break;
+					}
 				}
 			} else {
 				Utils.noPermissions(player);
