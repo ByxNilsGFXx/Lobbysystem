@@ -249,7 +249,7 @@ public class Utils {
 	public static boolean getChatState(UUID uuid){
 		boolean toReturn = false;
 		
-		File file = new File("plugins//Lobbysystem//Playerdata//"+uuid+".yml");
+		File file = new File("plugins//LobbySystem//Playerdata//"+uuid+".yml");
 		FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		
 		if(!configuration.contains("Chat")){
@@ -281,7 +281,7 @@ public class Utils {
 			break;
 		}
 		
-		File file = new File("plugins//Lobbysystem//Playerdata//"+uniqueId+".yml");
+		File file = new File("plugins//LobbySystem//Playerdata//"+uniqueId+".yml");
 		FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		
 		if(!configuration.contains("Chat")){

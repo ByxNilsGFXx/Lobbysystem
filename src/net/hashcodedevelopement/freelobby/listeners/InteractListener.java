@@ -155,7 +155,7 @@ public class InteractListener implements Listener {
 				}
 			} else if (e.getInventory().getTitle().equals("§b§lProfil")) {
 				if (itemStack.getType().equals(Material.BOOK)) {
-					File file = new File("plugins//Lobbysystem//Playerdata//" + player.getUniqueId() + ".yml");
+					File file = new File("plugins//LobbySystem//Playerdata//" + player.getUniqueId() + ".yml");
 					FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 
 					switch (Lobbysystem.language) {
