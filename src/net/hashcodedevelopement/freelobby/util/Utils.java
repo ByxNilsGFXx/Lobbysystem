@@ -137,7 +137,17 @@ public class Utils {
 			
 			cfg.set("FirstjoinNachricht.Bool", true);
 			cfg.set("FirstjoinNachricht.Nachricht.DE", msg1);
-			cfg.set("FirstjoinNachricht.Nachricht.DE", msg2);
+			cfg.set("FirstjoinNachricht.Nachricht.EN", msg2);
+		}
+		if (!cfg.contains("FirstjoinNachricht.Nachricht.EN")) {
+			List<String> msg2 = new ArrayList<>();
+			msg2.add(" ");
+			msg2.add("&8&m--------------------");
+			msg2.add("%prefix%The player %PlayerName% is new on the Server! &b#%PlayerCount%");
+			msg2.add("&8&m--------------------");
+			msg2.add(" ");
+			
+			cfg.set("FirstjoinNachricht.Nachricht.EN", msg2);
 		}
 		if (!cfg.contains("Tablist")) {
 			cfg.set("Tablist.Header.DE", "&0%NewLine%&8* &7Dein ServerName &8*%NewLine%&7Dein Motto%NewLine%&0");
