@@ -148,12 +148,6 @@ public class Utils {
 		
 		saveLobbyitemCfg();
 		saveCfg();
-
-		if(!cfg.getString("Language").equals("DE") || !cfg.getString("Language").equals("EN")){
-			System.out.println("Language "+cfg.getString("Language")+" is not supported! Choose DE or EN!");
-			cfg.set("Language", "EN");
-			saveCfg();
-		}
 		
 		Lobbysystem.language = Language.valueOf(cfg.getString("Language"));
 		

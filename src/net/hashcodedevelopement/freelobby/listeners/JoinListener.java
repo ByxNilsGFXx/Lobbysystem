@@ -39,7 +39,7 @@ public class JoinListener implements Listener {
 		}
 		TablistAPI.sendTabTitle(player, Utils.tablistHeader, Utils.tablistFooter);
 
-		File file = new File("plugins//Lobbysystem//Playerdata//" + player.getUniqueId() + ".yml");
+		File file = new File("plugins//LobbySystem//Playerdata//" + player.getUniqueId() + ".yml");
 		FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		
 		if (!configuration.contains("Chat")) {
