@@ -36,18 +36,19 @@ public class CMD_Navigator implements CommandExecutor {
 					switch (Lobbysystem.language) {
 					case DE:
 						lore.add("§7Erstelle Warps ganz einfach mit");
+						lore.add("§e/warp setWarp <Name> <Slot>");
 						inventory.setItem(13, ItemCreator.CreateItemwithMaterial(Material.BARRIER, 0, 1,
 								"§4Keine Warps erstellt!", lore));
 						break;
 					case EN:
 						lore.add("§7Create warps easily!");
+						lore.add("§e/warp setWarp <Name> <Slot>");
 						inventory.setItem(13, ItemCreator.CreateItemwithMaterial(Material.BARRIER, 0, 1,
 								"§4No warps created!", lore));
 						break;
 					default:
 						break;
 					}
-					lore.add("§e/warp setWarp <Name> <Slot>");
 				} else if (size >= 1) {
 					inventory = Bukkit.createInventory(null, 27, "§6§lNavigator");
 					for (String key : hashMap.keySet()) {
@@ -62,11 +63,13 @@ public class CMD_Navigator implements CommandExecutor {
 					switch (Lobbysystem.language) {
 					case DE:
 						lore.add("§7Erstelle Warps ganz einfach mit");
+						lore.add("§e/warp setWarp <Name> <Slot>");
 						inventory.setItem(13,
 								ItemCreator.CreateItemwithMaterial(Material.BARRIER, 0, 1, "§4Fehler", lore));
 						break;
 					case EN:
 						lore.add("§7Create warps easily!");
+						lore.add("§e/warp setWarp <Name> <Slot>");
 						inventory.setItem(13,
 								ItemCreator.CreateItemwithMaterial(Material.BARRIER, 0, 1, "§4Error", lore));
 						break;
