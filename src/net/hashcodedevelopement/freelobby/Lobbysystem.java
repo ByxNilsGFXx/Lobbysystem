@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.hashcodedevelopement.freelobby.commands.CMD_DailyReward;
 import net.hashcodedevelopement.freelobby.commands.CMD_Navigator;
 import net.hashcodedevelopement.freelobby.commands.CMD_Playerhider;
 import net.hashcodedevelopement.freelobby.commands.CMD_Profil;
@@ -24,11 +25,13 @@ import net.hashcodedevelopement.freelobby.listeners.JoinListener;
 import net.hashcodedevelopement.freelobby.listeners.QuitListener;
 import net.hashcodedevelopement.freelobby.manager.LanguageManager.Language;
 import net.hashcodedevelopement.freelobby.util.Utils;
+import net.hashcodedevelopement.freelobby.util.Utils.DailyRewardMode;
 
 public class Lobbysystem extends JavaPlugin {
 
 	private static Lobbysystem instance;
 	public static Language language;
+	public static DailyRewardMode mode;
 	
 	public static Plugin friendAddon = null;
 	public static Plugin coinsAddon = null;
@@ -115,6 +118,7 @@ public class Lobbysystem extends JavaPlugin {
 		getCommand("warp").setExecutor(new CMD_Warp());
 		getCommand("profil").setExecutor(new CMD_Profil());
 		getCommand("spawn").setExecutor(new CMD_Spawn());
+		getCommand("dailyreward").setExecutor(new CMD_DailyReward());
 		getCommand("playerhider").setExecutor(new CMD_Playerhider());
 	}
 

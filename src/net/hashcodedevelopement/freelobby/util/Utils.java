@@ -28,11 +28,11 @@ public class Utils {
 
 	public static ArrayList<Material> items = new ArrayList<>();
 
-	public static boolean joinMessage, quitMessage, firstMessage, commandWhitelist, singleServer;
+	public static boolean joinMessage, quitMessage, firstMessage, commandWhitelist, singleServer, dailyReward;
 
 	public static int playerCount;
 	public static String prefix, fehler, joinMsg, quitMsg, tablistHeader, tablistFooter, commandNotFound;
-	public static List<String> firstjoinMsg;
+	public static List<String> firstjoinMsg, dailyRewardCommandList;
 	public static String world;
 	
 	public static File file;
@@ -41,6 +41,10 @@ public class Utils {
 	public static File lobbyitemFile;
 	public static FileConfiguration lobbyitemCfg;
 
+	public enum DailyRewardMode {
+		COMMAND, COINS, OFF;
+	}
+	
 	static {
 		fehler = prefix + "§4§lFehler§7:§c ";
 
@@ -60,7 +64,7 @@ public class Utils {
 
 	public static void loadValues() {
 		if (!cfg.contains("Prefix")) {
-			cfg.options().header("Variablen: %prefix% = Prefix, %PlayerName% = Name des Spielers, %PlayerCount% = Zahl aller gejointen Spieler, %NewLine% = Neue Zeile");
+			cfg.options().header("Variables: %prefix% = Prefix, %PlayerName% = Name of the player, %PlayerCount% = Count of the joined players, %NewLine% = New line | DailyReward Modes: COMMAND = List of custom commands wich will be executed by the console, COINS = (Only works with our CoinsAddon!) This will add the player a custom amount of coins, OFF = No DailyReward");
 			cfg.set("Prefix", "&6&lL&e&lobby&6&lS&e&lystem &8» &7");
 			lobbyitemCfg.set("0.Slot", 1);
 			lobbyitemCfg.set("0.Name", "&7Navigator");
@@ -89,6 +93,13 @@ public class Utils {
 		}
 		if (!cfg.contains("Language")) {
 			cfg.set("Language", Language.EN.toString());
+		}
+		if (!cfg.contains("DailyReward")) {
+			 cfg.set("DailyReward.Mode", "COMMAND");
+			 List<String> list = new ArrayList<>();
+			 list.add("money add %PlayerName% 100");
+			 cfg.set("DailyReward.Coins", 100);
+			 cfg.set("DailyReward.CommandList", list);
 		}
 		if (!cfg.contains("JoinNachricht")) {
 			cfg.set("JoinNachricht.Bool", true);
@@ -169,6 +180,12 @@ public class Utils {
 		for (String key : lobbyitemCfg.getKeys(false)) {
 			items.add(Material.getMaterial(lobbyitemCfg.getString(key + ".Material")));
 		}
+		
+		String string = cfg.getString("DailyReward.Mode");
+		if(string.equalsIgnoreCase("false")){
+			string = "OFF";
+		}
+		Lobbysystem.mode = DailyRewardMode.valueOf(string);
 
 		if(Lobbysystem.language == Language.DE){
 			joinMessage = cfg.getBoolean("JoinNachricht.Bool");
