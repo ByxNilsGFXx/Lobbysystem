@@ -19,7 +19,7 @@ Rechte:
  extra:
   - lobby.extra.bypassCommandWhitelist : Mit dieser Permission darfst du alle Commands verwenden, auch wenn diese nicht in der Whitelist stehen
  commands:
-  - lobby.cmd.build : Erlaubt die Benutzung des /build Befehls
+  - lobby.build : Erlaubt die Benutzung des /build Befehls
   - lobby.cmd.warp : Erlaubt die Benutzung des /warp Befehls
 
 
